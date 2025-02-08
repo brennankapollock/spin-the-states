@@ -76,20 +76,34 @@ const MapSection = ({
     const { getRandomUSLocation } = await import("@/lib/maps");
 
     try {
-      const { lat, lng, cityName } = await getRandomUSLocation();
-      const position = { lat, lng };
+      let validLocation = false;
+      let attempts = 0;
+      let cityName = "Unknown Location";
+      let position = { lat: 0, lng: 0 };
 
+      // Try up to 3 times to get a valid city
+      while (!validLocation && attempts < 3) {
+        const result = await getRandomUSLocation();
+        if (result.cityName !== "Unknown Location") {
+          validLocation = true;
+          cityName = result.cityName;
+          position = { lat: result.lat, lng: result.lng };
+        }
+        attempts++;
+      }
+
+      // Update marker and map position with quick animation
       markerRef.current.setPosition(position);
       mapRef.current.panTo(position);
       mapRef.current.setZoom(8);
 
-      if (cityName !== "Unknown Location") {
-        onLocationSelect(cityName);
-      }
+      // Update the city name
+      onLocationSelect(cityName);
     } catch (error) {
       console.error("Failed to get random location:", error);
+      onLocationSelect("Error finding location");
     } finally {
-      setTimeout(() => setIsAnimating(false), 1000);
+      setTimeout(() => setIsAnimating(false), 300);
     }
   };
 
@@ -102,10 +116,10 @@ const MapSection = ({
       <motion.div
         className="absolute top-4 left-1/2 transform -translate-x-1/2"
         animate={{
-          scale: isAnimating ? [1, 1.2, 1] : 1,
-          opacity: isAnimating ? [0, 1, 0.8] : 0.8,
+          scale: isAnimating ? [1, 1.1, 1] : 1,
+          opacity: isAnimating ? [0.8, 1, 0.9] : 0.9,
         }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.3 }}
       >
         <Card className="p-4 shadow-lg bg-white/90 backdrop-blur">
           <div className="flex items-center gap-2">
