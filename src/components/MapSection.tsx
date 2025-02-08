@@ -23,11 +23,18 @@ const MapSection = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!googleMapsApiKey || !mapContainerRef.current) return;
+    if (!mapContainerRef.current) return;
+
+    // Use the API key from environment variable directly to ensure it's the latest
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    if (!apiKey) {
+      console.error("Google Maps API key is missing");
+      return;
+    }
 
     const initMap = async () => {
       const { initGoogleMaps } = await import("@/lib/maps");
-      await initGoogleMaps(googleMapsApiKey);
+      await initGoogleMaps(apiKey);
 
       const google = window.google;
       mapRef.current = new google.maps.Map(mapContainerRef.current, {
@@ -76,7 +83,9 @@ const MapSection = ({
       mapRef.current.panTo(position);
       mapRef.current.setZoom(8);
 
-      onLocationSelect(cityName);
+      if (cityName !== "Unknown Location") {
+        onLocationSelect(cityName);
+      }
     } catch (error) {
       console.error("Failed to get random location:", error);
     } finally {

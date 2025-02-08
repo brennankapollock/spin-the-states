@@ -10,18 +10,20 @@ interface HomeProps {
 
 const Home = ({
   initialCity = "Portland, OR",
-  googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+  googleMapsApiKey, // Remove default value to avoid stale API key
 }: HomeProps) => {
   const [selectedCity, setSelectedCity] = useState(initialCity);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLocationSelect = (location: string) => {
+  const handleLocationSelect = async (location: string) => {
     setIsLoading(true);
     setSelectedCity(location);
-    // Simulate data loading
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
+
+    // Here you would typically fetch artists data for the new location
+    // For now we'll just simulate a delay
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    setIsLoading(false);
   };
 
   const handleGenreChange = (genre: string) => {
