@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { MapPin, Shuffle } from "lucide-react";
 import { motion } from "framer-motion";
+import FlipText from "./FlipText";
 
 interface MapSectionProps {
   onLocationSelect?: (location: string) => void;
@@ -42,11 +43,6 @@ const MapSection = ({
         zoom: 4,
         styles: [
           {
-            featureType: "administrative",
-            elementType: "geometry",
-            stylers: [{ visibility: "simplified" }],
-          },
-          {
             featureType: "water",
             elementType: "geometry",
             stylers: [{ color: "#e9e9e9" }],
@@ -55,6 +51,36 @@ const MapSection = ({
             featureType: "landscape",
             elementType: "geometry",
             stylers: [{ color: "#f5f5f5" }],
+          },
+          {
+            featureType: "road",
+            elementType: "geometry",
+            stylers: [{ color: "#ffffff" }],
+          },
+          {
+            featureType: "poi",
+            elementType: "geometry",
+            stylers: [{ color: "#f5f5f5" }],
+          },
+          {
+            featureType: "transit",
+            elementType: "geometry",
+            stylers: [{ color: "#f5f5f5" }],
+          },
+          {
+            featureType: "administrative",
+            elementType: "geometry",
+            stylers: [{ visibility: "simplified", weight: 0.7 }],
+          },
+          {
+            featureType: "administrative.locality",
+            elementType: "labels",
+            stylers: [{ visibility: "off" }],
+          },
+          {
+            featureType: "poi",
+            elementType: "labels",
+            stylers: [{ visibility: "off" }],
           },
         ],
         disableDefaultUI: true,
@@ -108,26 +134,9 @@ const MapSection = ({
   };
 
   return (
-    <div className="w-full h-[400px] bg-gray-50 relative overflow-hidden">
+    <div className="w-full h-full bg-gray-50 relative">
       {/* Map Container */}
       <div ref={mapContainerRef} className="absolute inset-0" />
-
-      {/* Selected Location Indicator */}
-      <motion.div
-        className="absolute top-4 left-1/2 transform -translate-x-1/2"
-        animate={{
-          scale: isAnimating ? [1, 1.1, 1] : 1,
-          opacity: isAnimating ? [0.8, 1, 0.9] : 0.9,
-        }}
-        transition={{ duration: 0.3 }}
-      >
-        <Card className="p-4 shadow-lg bg-white/90 backdrop-blur">
-          <div className="flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-primary" />
-            <span className="font-semibold">{selectedCity}</span>
-          </div>
-        </Card>
-      </motion.div>
 
       {/* Random Location Button */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">

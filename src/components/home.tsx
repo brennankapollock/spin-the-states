@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MapSection from "./MapSection";
-import FilterBar from "./FilterBar";
+import FlipText from "./FlipText";
 import ArtistGrid from "./ArtistGrid";
 
 interface HomeProps {
@@ -42,20 +42,19 @@ const Home = ({
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="container mx-auto">
+    <div className="min-h-screen bg-background flex flex-col">
+      <main className="flex-1 grid grid-rows-2">
         <MapSection
           onLocationSelect={handleLocationSelect}
           selectedCity={selectedCity}
           isLoading={isLoading}
           googleMapsApiKey={googleMapsApiKey}
         />
-        <FilterBar
-          onGenreChange={handleGenreChange}
-          onPopularityChange={handlePopularityChange}
-          onEraChange={handleEraChange}
-        />
-        <ArtistGrid />
+        <div className="bg-background flex items-center justify-center">
+          <div className="text-7xl font-black tracking-tight">
+            <FlipText text={selectedCity} />
+          </div>
+        </div>
       </main>
     </div>
   );
